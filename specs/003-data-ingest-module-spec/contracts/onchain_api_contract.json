@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CryptoDataDownload On-Chain Blocks API Contract",
+    "version": "1.0.0",
+    "description": "API contract for blockchain daily summary metrics (BTC/ETH)"
+  },
+  "servers": [ { "url": "https://api.cryptodatadownload.com", "description": "Production" } ],
+  "paths": {
+    "/v1/data/summary/blockchain/blocks/": {
+      "get": {
+        "summary": "Fetch blockchain daily metrics",
+        "parameters": [
+          { "name": "symbol", "in": "query", "required": false, "schema": { "type": "string", "enum": ["btc","eth"], "default": "btc" } },
+          { "name": "enddate", "in": "query", "required": false, "schema": { "type": "string", "format": "date" } },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "minimum": 1, "maximum": 2500, "default": 25 } },
+          { "name": "return", "in": "query", "required": false, "schema": { "type": "string", "enum": ["JSON","CSV","XLSX"], "default": "JSON" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["result"],
+                  "properties": { "result": { "type": "array", "items": { "$ref": "#/components/schemas/OnChainItem" } } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NumericString": { "oneOf": [ {"type": "number"}, {"type": "string", "pattern": "^-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?$"} ] },
+      "OnChainItem": {
+        "type": "object",
+        "required": ["date","symbol"],
+        "additionalProperties": true,
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "symbol": { "type": "string", "enum": ["btc","eth"] },
+          "total_transactions": { "$ref": "#/components/schemas/NumericString" },
+          "total_block_count": { "$ref": "#/components/schemas/NumericString" },
+          "average_difficulty": { "$ref": "#/components/schemas/NumericString" },
+          "avg_seconds_between_blocks": { "$ref": "#/components/schemas/NumericString" },
+          "avg_block_size": { "$ref": "#/components/schemas/NumericString" },
+          "hashrate": { "$ref": "#/components/schemas/NumericString" },
+          "avg_transaction_count": { "$ref": "#/components/schemas/NumericString" },
+          "first_block": { "$ref": "#/components/schemas/NumericString" },
+          "last_block": { "$ref": "#/components/schemas/NumericString" },
+          "avg_gas_limit": { "$ref": "#/components/schemas/NumericString" },
+          "average_gas_used": { "$ref": "#/components/schemas/NumericString" },
+          "total_gas_used": { "$ref": "#/components/schemas/NumericString" },
+          "block_utilization": { "$ref": "#/components/schemas/NumericString" },
+          "complexity_score": { "$ref": "#/components/schemas/NumericString" }
+        }
+      }
+    }
+  }
+}
+
+

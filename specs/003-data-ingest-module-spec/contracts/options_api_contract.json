@@ -1,0 +1,148 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CryptoDataDownload Options Summary API Contract",
+    "version": "1.0.0",
+    "description": "API contract for Deribit options greeks and flow summary data"
+  },
+  "servers": [
+    {
+      "url": "https://api.cryptodatadownload.com",
+      "description": "Production CryptoDataDownload API"
+    }
+  ],
+  "paths": {
+    "/v1/data/summary/deribit/options/greeks/maturities/": {
+      "get": {
+        "summary": "Fetch options summary data",
+        "description": "Retrieve daily options flow and greeks data aggregated by maturity",
+        "parameters": [
+          {
+            "name": "underlying",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["BTC", "ETH"],
+              "default": "BTC"
+            },
+            "description": "Underlying asset symbol"
+          },
+          {
+            "name": "enddate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-12-31"
+            },
+            "description": "End date for data range (YYYY-MM-DD)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2500,
+              "default": 25
+            },
+            "description": "Maximum number of records to return"
+          },
+          {
+            "name": "return",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["JSON", "CSV", "XLSX"],
+              "default": "JSON"
+            },
+            "description": "Response format"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with options summary data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/OptionsSummaryItem" }
+                    }
+                  },
+                  "required": ["result"]
+                },
+                "example": {
+                  "result": [
+                    {
+                      "date": "2024-06-11",
+                      "underlying": "BTC",
+                      "maturity": "2025-03-28",
+                      "net_delta": -9.07,
+                      "buy_delta": 3.28,
+                      "sell_delta": -12.35,
+                      "net_gamma": 0,
+                      "net_vega": 5468.11,
+                      "net_theta": -522.42,
+                      "avg_iv": 67.93,
+                      "volume": 134.3,
+                      "buy_volume": 89,
+                      "sell_volume": 45.3,
+                      "usd_volume": 1742711
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters"
+          },
+          "429": {
+            "description": "Rate Limit Exceeded"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NumericString": {
+        "oneOf": [ { "type": "number" }, { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?$" } ],
+        "description": "Value may be a number or numeric string"
+      },
+      "OptionsSummaryItem": {
+        "type": "object",
+        "required": [
+          "date","underlying","maturity","net_delta","buy_delta","sell_delta","net_gamma","net_vega","net_theta","avg_iv","volume","buy_volume","sell_volume","usd_volume"
+        ],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "underlying": { "type": "string", "enum": ["BTC","ETH"] },
+          "maturity": { "type": "string", "format": "date" },
+          "net_delta": { "$ref": "#/components/schemas/NumericString" },
+          "buy_delta": { "$ref": "#/components/schemas/NumericString" },
+          "sell_delta": { "$ref": "#/components/schemas/NumericString" },
+          "net_gamma": { "$ref": "#/components/schemas/NumericString" },
+          "net_vega": { "$ref": "#/components/schemas/NumericString" },
+          "net_theta": { "$ref": "#/components/schemas/NumericString" },
+          "avg_iv": { "$ref": "#/components/schemas/NumericString" },
+          "volume": { "$ref": "#/components/schemas/NumericString" },
+          "buy_volume": { "$ref": "#/components/schemas/NumericString" },
+          "sell_volume": { "$ref": "#/components/schemas/NumericString" },
+          "usd_volume": { "$ref": "#/components/schemas/NumericString" }
+        }
+      }
+    }
+  }
+}
+

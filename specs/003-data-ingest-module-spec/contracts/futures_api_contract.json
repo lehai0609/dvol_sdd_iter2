@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CryptoDataDownload Futures OHLCV API Contract",
+    "version": "1.0.0",
+    "description": "API contract for Deribit futures OHLCV data"
+  },
+  "servers": [ { "url": "https://api.cryptodatadownload.com", "description": "Production" } ],
+  "paths": {
+    "/v1/data/ohlc/deribit/futures/": {
+      "get": {
+        "summary": "Fetch Deribit futures OHLCV",
+        "parameters": [
+          { "name": "symbol", "in": "query", "required": false, "schema": { "type": "string", "default": "BTC-PERPETUAL" }, "description": "Futures instrument (e.g., BTC-PERPETUAL)" },
+          { "name": "enddate", "in": "query", "required": false, "schema": { "type": "string", "format": "date" }, "description": "YYYY-MM-DD end date" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "minimum": 1, "maximum": 2500, "default": 25 } },
+          { "name": "return", "in": "query", "required": false, "schema": { "type": "string", "enum": ["JSON","CSV","XLSX"], "default": "JSON" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["result"],
+                  "properties": { "result": { "type": "array", "items": { "$ref": "#/components/schemas/FuturesItem" } } }
+                },
+                "example": {
+                  "result": [
+                    {
+                      "unix": "1693209600000",
+                      "date": "2023-08-28 08:00:00",
+                      "symbol": "BTC-PERPETUAL",
+                      "open": "25912.0",
+                      "high": "26231.5",
+                      "low": "25847.5",
+                      "close": "25994.5",
+                      "volume": "5492.31432737",
+                      "base_volume": "143083810.0"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NumericString": { "oneOf": [ {"type": "number"}, {"type": "string", "pattern": "^-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?$"} ] },
+      "MillisString": { "oneOf": [ {"type": "integer"}, {"type": "string", "pattern": "^\\d+$"} ] },
+      "FuturesItem": {
+        "type": "object",
+        "required": ["unix","date","symbol","open","high","low","close","volume","base_volume"],
+        "properties": {
+          "unix": { "$ref": "#/components/schemas/MillisString" },
+          "date": { "type": "string", "description": "Trade date-time" },
+          "symbol": { "type": "string" },
+          "open": { "$ref": "#/components/schemas/NumericString" },
+          "high": { "$ref": "#/components/schemas/NumericString" },
+          "low": { "$ref": "#/components/schemas/NumericString" },
+          "close": { "$ref": "#/components/schemas/NumericString" },
+          "volume": { "$ref": "#/components/schemas/NumericString" },
+          "base_volume": { "$ref": "#/components/schemas/NumericString" }
+        }
+      }
+    }
+  }
+}
+
+

@@ -1,0 +1,823 @@
+Access OHLCV data for DeriBit futures assets, includes expiries and Perpetuals. Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/ohlc/deribit/futures/
+
+
+Fields returned --->
+
+Unix - The opening epoch timestamp of the interval
+
+Date - The trade date
+
+Symbol - The specific instrument name, ie. ETH-PERPETUAL
+
+Open - The opening price of the interval
+
+High - The high price of the interval
+
+Low - The low price of the interval
+
+Close - The closing price of the interval
+
+Volume - Volume in base ccy traded
+
+Volume USD - Volume in USD terms
+
+Parameters
+Try it out
+Name	Description
+symbol
+string
+(query)
+Futures symbol ticker - ie. BTC-PERPETUAL or BTC-29MAR24
+
+Default value : BTC-PERPETUAL
+
+BTC-PERPETUAL
+enddate
+string
+(query)
+Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest.
+
+enddate - Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest. 
+limit
+integer
+(query)
+Maximum # of endpoints returned. Not required. Limit 2500.
+
+Default value : 25
+
+25
+return
+string
+(query)
+Type of Data to return: JSON, CSV or XLSX. Not required. Default is JSON
+
+Default value : JSON
+
+JSON
+Responses
+Response content type
+
+application/json
+Code	Description
+200	
+Success
+
+Example Value
+{
+  "result": [
+    {
+      "unix": "1693209600000",
+      "date": "2023-08-28 08:00:00",
+      "symbol": "BTC-PERPETUAL",
+      "open": "25912.0",
+      "high": "26231.5",
+      "low": "25847.5",
+      "close": "25994.5",
+      "volume": "5492.31432737",
+      "base_volume": "143083810.0"
+    },
+    {
+      "unix": "1693123200000",
+      "date": "2023-08-27 08:00:00",
+      "symbol": "BTC-PERPETUAL",
+      "open": "26039.0",
+      "high": "26168.5",
+      "low": "25866.0",
+      "close": "25912.5",
+      "volume": "3112.10717437",
+      "base_volume": "80956760.0"
+    }
+  ]
+}
+400	
+Bad Request
+
+Example Value
+{
+  "result": "Unable to pull data"
+}
+
+DeriBit OHLCV for volatility index (DVOL). Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/ohlc/deribit/volatility
+
+
+Fields returned --->
+
+Date - The trade date of which data is totaled
+
+Unix - The epoch/unix timestamp of the time interval
+
+Symbol - The volatility index ie. BTC or ETH
+
+Open - The opening price of the interval
+
+High - The high price of the interval
+
+Low - The low price of the interval
+
+Close - The closing price of the interval
+
+Parameters
+Try it out
+Name	Description
+symbol
+string
+(query)
+Volatility ticker - ie. BTC or ETH
+
+Default value : BTC
+
+BTC
+enddate
+string
+(query)
+Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest.
+
+enddate - Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest. 
+limit
+integer
+(query)
+Maximum # of endpoints returned. Not required. Limit 2500.
+
+Default value : 25
+
+25
+return
+string
+(query)
+Type of Data to return: JSON, CSV or XLSX. Not required. Default is JSON
+
+Default value : JSON
+
+JSON
+Responses
+Response content type
+
+application/json
+Code	Description
+200	
+Success
+
+Example Value
+{
+  "result": [
+    {
+      "date": "2023-08-30",
+      "unix": "1693353600000",
+      "symbol": "BTC",
+      "open": "40.6",
+      "high": "40.6",
+      "low": "40.18",
+      "close": "40.21"
+    },
+    {
+      "date": "2023-08-29",
+      "unix": "1693267200000",
+      "symbol": "BTC",
+      "open": "36.42",
+      "high": "44.99",
+      "low": "36.08",
+      "close": "40.6"
+    }
+  ]
+}
+400	
+Bad Request
+
+Example Value
+{
+  "result": "Unable to pull data"
+}
+
+Access blockchain historical data metrics. Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/summary/blockchain/blocks/
+
+
+Fields returned --->
+
+Date - The trade date
+
+Symbol - The specific blockchain name, either btc or eth
+
+Total Transactions - The sum total transactions across all blocks in a day
+
+Total Block Count - The total number of blocks in interval
+
+Average Difficulty - Average mining difficulty across all blocks in interval
+
+Avg Seconds Between Blocks - Avg time difference in seconds between blocks
+
+Hashrate - Total computational power being used to mine and process transactions on the network
+
+Avg Block Size - Average size of blocks in day
+
+Avg Transaction Count - Average number of transactions across all blocks in day
+
+First Block - First block confirmed on the day
+
+Last Block - Last block confirmed on the day
+
+Gas Limit Avg - (ETH only) The average of the maximum gas allowed on blocks
+
+Average Gas Used - (ETH only) Average amount of gas used across all blocks on a day
+
+Distinct Miners - (ETH only) The unique count of miners confirming blocks in day
+
+Total Gas Used - (ETH only) Total gas used across all blocks on a day
+
+Block Utilization - (ETH only) Average amount of gas used vs the gas limit across all blocks
+
+Complexity Score - (ETH only) Total gas used divided by the total number of transactions
+
+Access blockchain historical data metrics. Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/summary/blockchain/blocks/
+
+
+Fields returned --->
+
+Date - The trade date
+
+Symbol - The specific blockchain name, either btc or eth
+
+Total Transactions - The sum total transactions across all blocks in a day
+
+Total Block Count - The total number of blocks in interval
+
+Average Difficulty - Average mining difficulty across all blocks in interval
+
+Avg Seconds Between Blocks - Avg time difference in seconds between blocks
+
+Hashrate - Total computational power being used to mine and process transactions on the network
+
+Avg Block Size - Average size of blocks in day
+
+Avg Transaction Count - Average number of transactions across all blocks in day
+
+First Block - First block confirmed on the day
+
+Last Block - Last block confirmed on the day
+
+Gas Limit Avg - (ETH only) The average of the maximum gas allowed on blocks
+
+Average Gas Used - (ETH only) Average amount of gas used across all blocks on a day
+
+Distinct Miners - (ETH only) The unique count of miners confirming blocks in day
+
+Total Gas Used - (ETH only) Total gas used across all blocks on a day
+
+Block Utilization - (ETH only) Average amount of gas used vs the gas limit across all blocks
+
+Complexity Score - (ETH only) Total gas used divided by the total number of transactions
+
+Parameters
+Try it out
+Name	Description
+symbol
+string
+(query)
+Blockchain symbol - either btc or eth
+
+Default value : btc
+
+btc
+enddate
+string
+(query)
+Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest.
+
+enddate - Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest. 
+limit
+integer
+(query)
+Maximum # of endpoints returned. Not required. Limit 2500.
+
+Default value : 25
+
+25
+return
+string
+(query)
+Type of Data to return: JSON, CSV or XLSX. Not required. Default is JSON
+
+Default value : JSON
+
+JSON
+Responses
+Response content type
+
+application/json
+Code	Description
+200	
+Success
+
+Example Value
+{
+  "result": [
+    {
+      "date": "2024-03-08",
+      "symbol": "eth",
+      "total_transactions": 1212254,
+      "total_block_cnt": 7088,
+      "avg_block_difficulty": 0,
+      "avg_secs_between_blocks": 12.19,
+      "hashrate": 0,
+      "avg_block_size_MB": 0.1442,
+      "avg_transactions_count_per_block": 171,
+      "base_gas_fee_sum_in_ETH": 429797.4027,
+      "avg_gas_limit": 29999735,
+      "avg_gas_in_ETH_used_per_block": 0.0152,
+      "total_gas_used_in_ETH": 107.526,
+      "distinct_miners_count": 408,
+      "block_utilization": 0.506,
+      "complexity_score": 88699.201,
+      "first_block": 19386734,
+      "last_block": 19393821
+    },
+    {
+      "date": "2024-03-07",
+      "symbol": "eth",
+      "total_transactions": 1228816,
+      "total_block_cnt": 7160,
+      "avg_block_difficulty": 0,
+      "avg_secs_between_blocks": 12.07,
+      "hashrate": 0,
+      "avg_block_size_MB": 0.1472,
+      "avg_transactions_count_per_block": 172,
+      "base_gas_fee_sum_in_ETH": 490168.1214,
+      "avg_gas_limit": 29999791,
+      "avg_gas_in_ETH_used_per_block": 0.0151,
+      "total_gas_used_in_ETH": 108.4631,
+      "distinct_miners_count": 441,
+      "block_utilization": 0.505,
+      "complexity_score": 88266.385,
+      "first_block": 19379574,
+      "last_block": 19386733
+    }
+  ]
+}
+400	
+Bad Request
+
+Example Value
+{
+  "result": "Unable to pull data"
+}
+
+View summarized and aggregated greeks, IV and volume data across the options curve. Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/summary/deribit/options/greeks/maturities/
+
+
+Fields returned --->
+
+Date - The trade date
+
+Maturity - The maturity date of the option
+
+Net Delta - This is the sum of the total net delta in activity traded on date
+
+Buy Delta - This is the breakdown sum of total delta activity bought on trade date
+
+Sell Delta - This is the breakdown sum of total delta activity sold on trade date
+
+Net Gamma - This is the sum of the total net gamma in activity traded on date
+
+Net Vega - This is the sum of the total net vega in activity traded on date
+
+Net Theta - This is the sum of the total net theta in activity traded on date
+
+Avg IV - This is the average of all transactions implied volatility to arrive at a singular IV for the day
+
+Volume - Total volume traded for all activity in base ccy
+
+Buy Volume - The buy volume out of the total volume
+
+Sell Volume - The sell volume out of the total volume
+
+USD Volume - Total volume in USD terms
+
+Parameters
+Try it out
+Name	Description
+underlying
+string
+(query)
+Option Base Underlying - Either BTC or ETH
+
+Default value : BTC
+
+BTC
+enddate
+string
+(query)
+Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest.
+
+enddate - Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest. 
+limit
+integer
+(query)
+Maximum # of endpoints returned. Not required. Limit 2500.
+
+Default value : 25
+
+25
+return
+string
+(query)
+Type of Data to return: JSON, CSV or XLSX. Not required. Default is JSON
+
+Default value : JSON
+
+JSON
+Responses
+Response content type
+
+application/json
+Code	Description
+200	
+Success
+
+Example Value
+{
+  "result": [
+    {
+      "date": "2024-06-11",
+      "underlying": "BTC",
+      "maturity": "2025-03-28",
+      "net_delta": -9.07,
+      "buy_delta": 3.28,
+      "sell_delta": -12.35,
+      "net_gamma": 0,
+      "net_vega": 5468.11,
+      "net_theta": -522.42,
+      "avg_iv": 67.93,
+      "volume": 134.3,
+      "buy_volume": 89,
+      "sell_volume": 45.3,
+      "usd_volume": 1742711
+    },
+    {
+      "date": "2024-06-11",
+      "underlying": "BTC",
+      "maturity": "2024-12-27",
+      "net_delta": 695.51,
+      "buy_delta": 538.73,
+      "sell_delta": 156.78,
+      "net_gamma": 0.002,
+      "net_vega": 42078.27,
+      "net_theta": -12293.9,
+      "avg_iv": 64.37,
+      "volume": 2698.7,
+      "buy_volume": 1422.8,
+      "sell_volume": 1275.9,
+      "usd_volume": 19809665
+    },
+    {
+      "date": "2024-06-11",
+      "underlying": "BTC",
+      "maturity": "2024-09-27",
+      "net_delta": 96.58,
+      "buy_delta": 126.63,
+      "sell_delta": -30.05,
+      "net_gamma": 0.003,
+      "net_vega": 28362.85,
+      "net_theta": -9368.59,
+      "avg_iv": 60.75,
+      "volume": 1324.1,
+      "buy_volume": 770.8,
+      "sell_volume": 553.3,
+      "usd_volume": 8050986
+    }
+  ]
+}
+400	
+Bad Request
+
+Example Value
+{
+  "result": "Unable to pull data"
+}
+
+DeriBit Option(s) Historical OHLCV timeseries. Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/ohlc/deribit/options/
+
+
+Fields returned --->
+
+Unix - The business date in epoch/unix timestamp
+
+Date - The business date
+
+Open - The opening price of the interval
+
+High - The high price of the interval
+
+Low - The low price of the interval
+
+Close - The closing price of the interval
+
+Volume - Volume in underlying contracts
+
+Parameters
+Try it out
+Name	Description
+symbol *
+string
+(query)
+Option Instrument Specific Symbol ie. ETH-230825-2300-P
+
+Default value : BTC-27DEC24-41000-C
+
+BTC-27DEC24-41000-C
+return
+string
+(query)
+Type of Data to return: JSON, CSV or XLSX. Not required. Default is JSON
+
+Default value : JSON
+
+JSON
+Responses
+Response content type
+
+application/json
+Code	Description
+200	
+Success
+
+Example Value
+{
+  "result": [
+    {
+      "unix": 1718524800000,
+      "date": "2024-06-16",
+      "symbol": "ETH-19JUN24-3575-C",
+      "open": "0.018",
+      "high": "0.021",
+      "low": "0.017",
+      "close": "0.017",
+      "volume": 1009
+    }
+  ]
+}
+400	
+Bad Request
+
+Example Value
+{
+  "result": "Unable to pull data"
+}
+
+DeriBit OHLCV for funding tickers. Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/ohlc/deribit/funding
+
+
+Fields returned --->
+
+Date - The trade date of which data is totaled
+
+Unix - The epoch/unix timestamp of the time interval
+
+Symbol - The futures underlying ie. BTC-Perpetual
+
+Index Price - Current Index price at the interval
+
+Prev Index Price - Previous Index price at the interval
+
+Interest 8H - Interest exchanged over the last 8 hours
+
+Interest 1H - Interest exchanged over the last 1 hour
+
+Parameters
+Cancel
+Name	Description
+symbol
+string
+(query)
+Funding symbol ticker - ie. BTC-PERPETUAL
+
+BTC-PERPETUAL
+enddate
+string
+(query)
+Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest.
+
+enddate - Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest. 
+limit
+integer
+(query)
+Maximum # of endpoints returned. Not required. Limit 2500.
+
+25
+return
+string
+(query)
+Type of Data to return: JSON, CSV or XLSX. Not required. Default is JSON
+
+JSON
+Execute
+Clear
+Responses
+Response content type
+
+application/json
+Curl
+
+curl -X GET "https://api.cryptodatadownload.com/v1/data/ohlc/deribit/futures/funding/?symbol=BTC-PERPETUAL&limit=25&return=JSON" -H  "accept: application/json"
+Request URL
+https://api.cryptodatadownload.com/v1/data/ohlc/deribit/futures/funding/?symbol=BTC-PERPETUAL&limit=25&return=JSON
+Server response
+Code	Details
+401
+Undocumented
+Error: Unauthorized
+Response body
+Download
+{
+  "detail": "Authentication credentials were not provided."
+}
+Response headers
+ allow: GET,HEAD,OPTIONS 
+ connection: keep-alive 
+ content-length: 58 
+ content-type: application/json 
+ date: Sun,14 Sep 2025 14:40:38 GMT 
+ referrer-policy: same-origin 
+ server: PythonAnywhere 
+ vary: Accept,Origin 
+ www-authenticate: Token 
+ x-content-type-options: nosniff 
+ x-frame-options: DENY 
+ x-xss-protection: 1; mode=block 
+Responses
+Code	Description
+200	
+Success
+
+Example Value
+{
+  "result": [
+    {
+      "date": "2023-08-30 00:00:00",
+      "unix": "1693353600000",
+      "symbol": "BTC-PERPETUAL",
+      "index_price": "27720.56",
+      "prev_index_price": "27642.6",
+      "interest_8h": "-1.4691613145727188e-05",
+      "interest_1h": "-1.03824239374694e-08"
+    },
+    {
+      "date": "2023-08-29 23:00:00",
+      "unix": "1693350000000",
+      "symbol": "BTC-PERPETUAL",
+      "index_price": "27642.6",
+      "prev_index_price": "27659.73",
+      "interest_8h": "-3.0620114505467006e-05",
+      "interest_1h": "3.701518041426182e-07"
+    }
+  ]
+}
+400	
+Bad Request
+
+Example Value
+{
+  "result": "Unable to pull data"
+}
+
+Access blockchain historical data metrics. Returns either JSON, CSV or XLSX file
+
+
+GET https://api.cryptodatadownload.com/v1/data/summary/blockchain/blocks/
+
+
+Fields returned --->
+
+Date - The trade date
+
+Symbol - The specific blockchain name, either btc or eth
+
+Total Transactions - The sum total transactions across all blocks in a day
+
+Total Block Count - The total number of blocks in interval
+
+Average Difficulty - Average mining difficulty across all blocks in interval
+
+Avg Seconds Between Blocks - Avg time difference in seconds between blocks
+
+Hashrate - Total computational power being used to mine and process transactions on the network
+
+Avg Block Size - Average size of blocks in day
+
+Avg Transaction Count - Average number of transactions across all blocks in day
+
+First Block - First block confirmed on the day
+
+Last Block - Last block confirmed on the day
+
+Gas Limit Avg - (ETH only) The average of the maximum gas allowed on blocks
+
+Average Gas Used - (ETH only) Average amount of gas used across all blocks on a day
+
+Distinct Miners - (ETH only) The unique count of miners confirming blocks in day
+
+Total Gas Used - (ETH only) Total gas used across all blocks on a day
+
+Block Utilization - (ETH only) Average amount of gas used vs the gas limit across all blocks
+
+Complexity Score - (ETH only) Total gas used divided by the total number of transactions
+
+Parameters
+Try it out
+Name	Description
+symbol
+string
+(query)
+Blockchain symbol - either btc or eth
+
+Default value : btc
+
+btc
+enddate
+string
+(query)
+Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest.
+
+enddate - Most recent date to fetch data for in format YYYY-MM-DD. Leave blank to get latest. 
+limit
+integer
+(query)
+Maximum # of endpoints returned. Not required. Limit 2500.
+
+Default value : 25
+
+25
+return
+string
+(query)
+Type of Data to return: JSON, CSV or XLSX. Not required. Default is JSON
+
+Default value : JSON
+
+JSON
+
+AUTHENTICATION TUTORIAL:
+Accessing Via cURL
+One common way of accessing APIs has been thru the use of cURL, which we also support. Here is an example for accessing thru cURL:
+curl -X GET "https://api.cryptodatadownload.com/v1/data/summary/blockchain/blocks/?symbol=btc&limit=25&return=JSON" -H "accept: application/json" -H "Authorization: TOKEN b456bc2badf969275"
+
+
+Accessing Via Python
+You can also easily access the API via your favorite programming language (ours is Python). We've laid out two examples in the code below. One method uses the requests library to pull as if you were passing a URL string to the browser. And the other method passes the Authentication header in the headers of the request. Both methods work.
+                                    # CryptoDataDownload
+# MIT License
+# No express warranty
+import requests
+import pandas as pd
+TOKEN = 'YOUR API TOKEN'
+
+
+def example_1():
+    """This example will pull BTC blockchain block data and load into a Pandas Dataframe """
+    api_url = f"https://api.cryptodatadownload.com/v1/data/summary/blockchain/blocks/?symbol=btc&limit=25&return=JSON&auth_token={TOKEN}"
+    response = requests.get(api_url)
+    data = response.json()
+
+    # Load the data into a pandas DataFrame
+    df = pd.json_normalize(data, 'result')
+    print(df.head())  # print sample rows
+
+
+def example_2():
+    """This example will pull BTC blockchain block data and load into a Pandas Dataframe using Auth Header"""
+    api_url = f"https://api.cryptodatadownload.com/v1/data/summary/blockchain/blocks/?symbol=btc&limit=25&return=JSON"
+
+    headers = {
+        'Authorization': f'TOKEN {TOKEN}'
+    }
+    response = requests.get(api_url, headers=headers)  # include token in header
+    data = response.json()
+
+    # Load the data into a pandas DataFrame
+    df = pd.json_normalize(data, 'result')
+    print(df.head())  # print sample rows
+
+
+if __name__ == "__main__":
+    example_1()
+    example_2()
+                                                        

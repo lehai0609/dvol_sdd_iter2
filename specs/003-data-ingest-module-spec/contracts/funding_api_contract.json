@@ -1,0 +1,54 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CryptoDataDownload Funding API Contract",
+    "version": "1.0.0",
+    "description": "API contract for Deribit funding data"
+  },
+  "servers": [ { "url": "https://api.cryptodatadownload.com", "description": "Production" } ],
+  "paths": {
+    "/v1/data/ohlc/deribit/futures/funding/": {
+      "get": {
+        "summary": "Fetch Deribit funding data",
+        "parameters": [
+          { "name": "symbol", "in": "query", "required": false, "schema": { "type": "string", "default": "BTC-PERPETUAL" } },
+          { "name": "enddate", "in": "query", "required": false, "schema": { "type": "string", "format": "date" } },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "minimum": 1, "maximum": 2500, "default": 25 } },
+          { "name": "return", "in": "query", "required": false, "schema": { "type": "string", "enum": ["JSON","CSV","XLSX"], "default": "JSON" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "required": ["result"], "properties": { "result": { "type": "array", "items": { "$ref": "#/components/schemas/FundingItem" } } } },
+                "example": { "result": [ { "date": "2023-08-30 00:00:00", "unix": "1693353600000", "symbol": "BTC-PERPETUAL", "index_price": "27720.56", "prev_index_price": "27642.6", "interest_8h": "-1.4691613145727188e-05", "interest_1h": "-1.03824239374694e-08" } ] }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NumericString": { "oneOf": [ {"type": "number"}, {"type": "string", "pattern": "^-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?$"} ] },
+      "MillisString": { "oneOf": [ {"type": "integer"}, {"type": "string", "pattern": "^\\d+$"} ] },
+      "FundingItem": {
+        "type": "object",
+        "required": ["date","unix","symbol","index_price","prev_index_price","interest_8h","interest_1h"],
+        "properties": {
+          "date": { "type": "string" },
+          "unix": { "$ref": "#/components/schemas/MillisString" },
+          "symbol": { "type": "string" },
+          "index_price": { "$ref": "#/components/schemas/NumericString" },
+          "prev_index_price": { "$ref": "#/components/schemas/NumericString" },
+          "interest_8h": { "$ref": "#/components/schemas/NumericString" },
+          "interest_1h": { "$ref": "#/components/schemas/NumericString" }
+        }
+      }
+    }
+  }
+}
+
+

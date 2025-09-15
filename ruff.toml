@@ -1,0 +1,16 @@
+line-length = 88
+target-version = "py311"
+
+select = [
+  "E",  # pycodestyle errors
+  "F",  # pyflakes
+  "I",  # isort
+  "UP", # pyupgrade
+]
+
+ignore = [
+  "E203", # whitespace before ':' (compatible with black)
+]
+
+fix = true
+
