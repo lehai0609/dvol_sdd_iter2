@@ -28,11 +28,11 @@ The 01_data_ingest module establishes a robust, daily ETL pipeline that pulls cr
 ## Technical Context
 
 **Language/Version**: Python 3.11+
-**Primary Dependencies**: pandas, pyarrow, requests, pydantic (schema validation), schedule (cron-like orchestration), typer (CLI)
+**Primary Dependencies**: pandas, pyarrow, requests, pydantic (schema validation), schedule (cron-like orchestration), jupyter, papermill, jupytext, tqdm
 **Storage**: Parquet files partitioned by asset and year-month, with optional PostgreSQL for metadata tracking
 **Testing**: pytest with integration tests against actual API endpoints and mock responses
 **Target Platform**: Linux server environment with scheduled execution (cron or systemd timers)
-**Project Type**: single (focused data ingestion library with CLI interface)
+**Project Type**: single (focused data ingestion library with Jupyter notebook interface for command and control)
 **Performance Goals**: Process 5 data sources × 2 assets within 30 minutes, handle 2500-record API responses efficiently
 **Constraints**: 00:00 UTC daily cut-off deadline, zero data leakage tolerance, deterministic checksums for reproducibility
 **Scale/Scope**: ~10K records/day, 5 API endpoints, 2 assets (BTC/ETH), 1-year historical backfill capability
@@ -41,16 +41,16 @@ The 01_data_ingest module establishes a robust, daily ETL pipeline that pulls cr
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 **Simplicity**:
-- Projects: 1 (data ingestion pipeline with CLI)
+- Projects: 1 (data ingestion pipeline with Jupyter notebook interface)
 - Using framework directly? Yes (pandas/pyarrow without wrapper classes)
 - Single data model? Yes (common schema with asset-specific nullable fields)
 - Avoiding patterns? Yes (direct API client, no Repository pattern overhead)
 
 **Architecture**:
-- EVERY feature as library? Yes (dvol_data_ingest library with CLI)
+- EVERY feature as library? Yes (dvol_data_ingest library with Jupyter notebook interface)
 - Libraries listed:
   - `dvol_data_ingest`: Core ETL functionality (API clients, schema validation, Parquet I/O)
-- CLI per library: `dvol-ingest --help/--version/--format` with commands: fetch, validate, backfill, status
+- Notebook interface: Single control notebook with cells for: fetch, validate, backfill, status operations
 - Library docs: llms.txt format planned for Claude Code integration
 
 **Testing (NON-NEGOTIABLE)**:
@@ -63,7 +63,7 @@ The 01_data_ingest module establishes a robust, daily ETL pipeline that pulls cr
 
 **Observability**:
 - Structured logging included? Yes (JSON logs with timestamp, source, asset, status fields)
-- Frontend logs → backend? N/A (CLI-only tool)
+- Frontend logs → backend? Yes (notebook cell outputs captured and logged)
 - Error context sufficient? Yes (API response codes, data validation failures, file I/O errors)
 
 **Versioning**:
@@ -93,7 +93,7 @@ src/dvol_data_ingest/
 ├── validators/          # Schema and data quality validation
 ├── storage/             # Parquet I/O and partitioning logic
 ├── utils/               # UTC normalization, checksum calculation
-├── cli/                 # Typer-based CLI interface
+├── notebooks/           # Jupyter notebook interface and control center
 └── __init__.py
 
 tests/
@@ -107,7 +107,34 @@ config/
 └── settings.yaml        # Default configuration (endpoints, timeouts, etc.)
 ```
 
-**Structure Decision**: Option 1 (single project) - focused data ingestion tool without web/mobile complexity
+**Structure Decision**: Option 1 (single project) - focused data ingestion tool with notebook-driven interface for interactive control and monitoring
+
+### Notebook-Driven Development Approach
+
+**Control Notebook**: `src/dvol_data_ingest/notebooks/control_center.ipynb`
+- **Interactive Operations**: Each major pipeline operation (fetch, validate, backfill, status) implemented as dedicated notebook cells
+- **Real-time Feedback**: Immediate visualization of data quality metrics, API responses, and processing status
+- **Exploratory Analysis**: Built-in cells for investigating data issues, schema changes, and performance bottlenecks
+- **Parameterized Execution**: Support for papermill-based automation while maintaining interactive development capabilities
+
+**Notebook Structure**:
+```
+# Cell 1: Environment Setup & Imports
+# Cell 2: Configuration & Authentication
+# Cell 3: Data Fetching Operations
+# Cell 4: Schema Validation & Quality Checks
+# Cell 5: Parquet Storage & Partitioning
+# Cell 6: Monitoring & Status Dashboard
+# Cell 7: Backfill & Historical Data Operations
+# Cell 8: Troubleshooting & Debug Tools
+```
+
+**Benefits**:
+- **Immediate Feedback**: See API responses, data samples, and validation results instantly
+- **Interactive Debugging**: Step through pipeline stages with live data inspection
+- **Documentation**: Self-documenting approach with markdown cells explaining each operation
+- **Reproducibility**: Version-controlled notebook with deterministic cell execution order
+- **Collaboration**: Shared notebook interface for data engineers and researchers
 
 ## Phase 0: Outline & Research
 
@@ -170,16 +197,16 @@ config/
 
 **Task Generation Strategy**:
 - Load `/templates/tasks-template.md` as base with data ingestion-specific context
-- Generate tasks from Phase 1 design docs (API contracts, data models, CLI interface)
+- Generate tasks from Phase 1 design docs (API contracts, data models, notebook interface)
 - Each API endpoint → contract test task [P] (can run in parallel)
 - Each data model → Pydantic schema creation task [P]
 - Each validation rule → validator implementation task
 - Integration pipeline → end-to-end test scenario
-- CLI commands → user acceptance test scenarios
+- Notebook cells → interactive execution and validation scenarios
 
 **Ordering Strategy**:
 - TDD order: Schema tests → Schema implementation → API client tests → API client implementation
-- Dependency order: Models → Validators → API Clients → Storage → CLI → Integration
+- Dependency order: Models → Validators → API Clients → Storage → Notebook Interface → Integration
 - Mark [P] for parallel execution where dependencies allow
 - Critical path: UTC normalization and checksum logic (foundational for all downstream tasks)
 
@@ -189,7 +216,7 @@ config/
 - Parquet I/O with partitioning strategy
 - UTC timezone normalization utilities
 - Checksum calculation and verification
-- CLI interface with fetch/validate/backfill/status commands
+- Jupyter notebook control interface with interactive cells for fetch/validate/backfill/status operations
 - Integration tests for complete pipeline
 - Monitoring and alerting setup
 - Documentation and runbooks
@@ -458,7 +485,7 @@ The 01_data_ingest module is considered complete when ALL of the following crite
 No constitutional violations identified. The design follows simplicity principles with:
 - Single project focus (data ingestion only)
 - Direct use of pandas/pyarrow without wrapper abstractions
-- Library-first architecture with CLI interface
+- Library-first architecture with Jupyter notebook interface
 - Comprehensive testing strategy following TDD principles
 
 ## Progress Tracking

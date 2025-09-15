@@ -1,0 +1,6 @@
+default_jupytext_formats = "ipynb,py:percent"
+notebook_metadata_filter = "-widgets,-varInspector"
+cell_metadata_filter = "-all"
+formats = [
+  {root = "notebooks", formats = "ipynb,py:percent"},
+]

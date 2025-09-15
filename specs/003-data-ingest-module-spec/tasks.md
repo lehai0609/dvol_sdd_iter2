@@ -5,7 +5,7 @@
 
 ## Execution Flow (main)
 ```
-✓ 1. Load plan.md from feature directory → Tech stack: Python 3.11+, pandas, pyarrow, pydantic, requests, typer
+✓ 1. Load plan.md from feature directory → Tech stack: Python 3.11+, pandas, pyarrow, pydantic, requests, jupyter, papermill
 ✓ 2. Load design documents:
    → data-model.md: 5 entities extracted (DVOLRecord, OptionsSummaryRecord, OHLCVRecord, FundingRecord, OnChainRecord)
    → contracts/: 2 API contract files (DVOL, Options) + 3 more endpoints needed
@@ -32,9 +32,9 @@
 
 ## Phase 3.1: Setup & Project Infrastructure
 
-- [x] **T001** Create Python project structure per implementation plan: `src/dvol_data_ingest/` with subdirectories (models/, clients/, validators/, storage/, utils/, cli/), `tests/` with subdirectories (contract/, integration/, unit/, fixtures/), `config/` with subdirectories (schemas/)
+- [x] **T001** Create Python project structure per implementation plan: `src/dvol_data_ingest/` with subdirectories (models/, clients/, validators/, storage/, utils/, notebooks/), `tests/` with subdirectories (contract/, integration/, unit/, fixtures/), `config/` with subdirectories (schemas/)
 
-- [x] **T002** Initialize Python project with pyproject.toml: dependencies (pandas>=2.0, pyarrow>=10.0, requests>=2.28, pydantic>=2.0, typer>=0.9, schedule>=1.2), dev dependencies (pytest>=7.0, pytest-mock, pytest-asyncio, black, ruff), project metadata and entry points
+- [x] **T002** Initialize Python project with pyproject.toml: dependencies (pandas>=2.0, pyarrow>=10.0, requests>=2.28, pydantic>=2.0, jupyter>=1.0, papermill>=2.4, jupytext>=1.14, schedule>=1.2), dev dependencies (pytest>=7.0, pytest-mock, pytest-asyncio, black, ruff), project metadata
 
 - [x] **T003** [P] Configure development tools: `.pre-commit-hooks.yaml` with black, ruff, pytest; `.gitignore` for Python, data files, logs; `ruff.toml` for linting rules; `pytest.ini` for test configuration
 
@@ -75,39 +75,39 @@
 
 ## Phase 3.4: API Client Implementation
 
-- [ ] **T019** [P] Base API client: `src/dvol_data_ingest/clients/base.py` - implement `CDDClient` base class with session management, authentication handling, timeout configuration, exponential backoff retry logic, rate limiting
+- [x] **T019** [P] Base API client: `src/dvol_data_ingest/clients/base.py` - implement `CDDClient` base class with session management, authentication handling, timeout configuration, exponential backoff retry logic, rate limiting
 
-- [ ] **T020** [P] DVOL client: `src/dvol_data_ingest/clients/dvol.py` - implement `DVOLClient` inheriting from CDDClient, handle symbol parameter (BTC/ETH), enddate parameter, limit parameter, response parsing to DVOLApiResponse
+- [x] **T020** [P] DVOL client: `src/dvol_data_ingest/clients/dvol.py` - implement `DVOLClient` inheriting from CDDClient, handle symbol parameter (BTC/ETH), enddate parameter, limit parameter, response parsing to DVOLApiResponse
 
-- [ ] **T021** [P] Options client: `src/dvol_data_ingest/clients/options.py` - implement `OptionsClient` for options summary endpoint, handle underlying parameter (BTC/ETH), parse response to OptionsSummaryApiResponse list
+- [x] **T021** [P] Options client: `src/dvol_data_ingest/clients/options.py` - implement `OptionsClient` for options summary endpoint, handle underlying parameter (BTC/ETH), parse response to OptionsSummaryApiResponse list
 
-- [ ] **T022** [P] Futures client: `src/dvol_data_ingest/clients/futures.py` - implement `FuturesClient` for futures OHLCV, handle perpetual and dated futures symbols, parse response to FuturesOHLCVApiResponse
+- [x] **T022** [P] Futures client: `src/dvol_data_ingest/clients/futures.py` - implement `FuturesClient` for futures OHLCV, handle perpetual and dated futures symbols, parse response to FuturesOHLCVApiResponse
 
-- [ ] **T023** [P] Funding client: `src/dvol_data_ingest/clients/funding.py` - implement `FundingClient` for funding rates, handle perpetual symbols only (BTC-PERPETUAL, ETH-PERPETUAL), parse to FundingRatesApiResponse
+- [x] **T023** [P] Funding client: `src/dvol_data_ingest/clients/funding.py` - implement `FundingClient` for funding rates, handle perpetual symbols only (BTC-PERPETUAL, ETH-PERPETUAL), parse to FundingRatesApiResponse
 
-- [ ] **T024** [P] OnChain client: `src/dvol_data_ingest/clients/onchain.py` - implement `OnChainClient` for blockchain data, handle btc/eth lowercase symbols, parse to OnChainDataApiResponse with proper ETH field handling
+- [x] **T024** [P] OnChain client: `src/dvol_data_ingest/clients/onchain.py` - implement `OnChainClient` for blockchain data, handle btc/eth lowercase symbols, parse to OnChainDataApiResponse with proper ETH field handling
 
 ## Phase 3.5: Data Processing & Validation
 
-- [ ] **T025** [P] UTC normalization utility: `src/dvol_data_ingest/utils/datetime.py` - implement UTC timestamp conversion from Unix milliseconds, ISO date string parsing, timezone validation, 00:00 UTC cutoff enforcement
+- [x] **T025** [P] UTC normalization utility: `src/dvol_data_ingest/utils/datetime.py` - implement UTC timestamp conversion from Unix milliseconds, ISO date string parsing, timezone validation, 00:00 UTC cutoff enforcement
 
-- [ ] **T026** [P] Checksum calculation utility: `src/dvol_data_ingest/utils/checksum.py` - implement deterministic SHA-256 hash calculation for records, sorted dictionary representation, JSON canonical encoding for platform independence
+- [x] **T026** [P] Checksum calculation utility: `src/dvol_data_ingest/utils/checksum.py` - implement deterministic SHA-256 hash calculation for records, sorted dictionary representation, JSON canonical encoding for platform independence
 
-- [ ] **T027** [P] Schema validators: `src/dvol_data_ingest/validators/schema.py` - implement validation pipeline for API responses, field type checking, range validation, cross-field validation (e.g., maturity > date)
+- [x] **T027** [P] Schema validators: `src/dvol_data_ingest/validators/schema.py` - implement validation pipeline for API responses, field type checking, range validation, cross-field validation (e.g., maturity > date)
 
-- [ ] **T028** [P] Data quality validators: `src/dvol_data_ingest/validators/quality.py` - implement outlier detection, completeness checking, temporal consistency validation, cross-source alignment checks
+- [x] **T028** [P] Data quality validators: `src/dvol_data_ingest/validators/quality.py` - implement outlier detection, completeness checking, temporal consistency validation, cross-source alignment checks
 
 ## Phase 3.6: Storage Engine
 
-- [ ] **T029** [P] Parquet storage engine: `src/dvol_data_ingest/storage/parquet.py` - implement partitioned Parquet writing by asset/year-month, row group size optimization (~100MB), Snappy compression, atomic writes with staging
+- [x] **T029** [P] Parquet storage engine: `src/dvol_data_ingest/storage/parquet.py` - implement partitioned Parquet writing by asset/year-month, row group size optimization (~100MB), Snappy compression, atomic writes with staging
 
-- [ ] **T030** [P] State management: `src/dvol_data_ingest/storage/state.py` - implement last-fetch tracking per (data_source, asset), state persistence in JSON format, incremental fetch logic, state validation and recovery
+- [x] **T030** [P] State management: `src/dvol_data_ingest/storage/state.py` - implement last-fetch tracking per (data_source, asset), state persistence in JSON format, incremental fetch logic, state validation and recovery
 
-## Phase 3.7: CLI Interface
+## Phase 3.7: Notebook Interface
 
-- [ ] **T031** CLI main application: `src/dvol_data_ingest/cli/main.py` - implement Typer-based CLI with commands: fetch, validate, backfill, status, run-daily, test-connection; argument parsing, error handling, progress reporting
+- [x] **T031** Control center notebook: `notebooks/control_center.ipynb` - implement Jupyter notebook with 8 main cells: environment setup, configuration/auth, data fetching operations, schema validation, Parquet storage, monitoring dashboard, backfill operations, troubleshooting tools
 
-- [ ] **T032** CLI fetch command: extend `src/dvol_data_ingest/cli/main.py` - implement fetch command with source selection (dvol, options, futures, funding, onchain), asset selection (BTC, ETH), date range parameters, incremental vs full refresh
+- [x] **T032** Notebook operation functions: `src/dvol_data_ingest/notebooks/operations.py` - implement supporting functions for notebook cells: interactive_fetch(), validate_data(), run_backfill(), show_status(), display_metrics(), troubleshoot_pipeline() with progress bars and visualization
 
 ## Phase 3.8: Integration & End-to-End
 
@@ -122,14 +122,14 @@
 ## Dependencies
 
 **Phase Dependencies**:
-- Setup (T001-T005) → Contract Tests (T006-T011) → Models (T012-T018) → Clients (T019-T024) → Processing (T025-T028) → Storage (T029-T030) → CLI (T031-T032) → Integration (T033-T034) → Polish (T035)
+- Setup (T001-T005) → Contract Tests (T006-T011) → Models (T012-T018) → Clients (T019-T024) → Processing (T025-T028) → Storage (T029-T030) → Notebook Interface (T031-T032) → Integration (T033-T034) → Polish (T035)
 
 **Critical Path**:
 - T001-T002 (project setup) blocks everything
 - T006-T011 (contract tests) must fail before T012-T018 (models)
 - T012-T018 (models) blocks T019-T024 (clients)
-- T025-T030 (processing/storage) required for T031-T032 (CLI)
-- T031-T032 (CLI) required for T033-T034 (integration tests)
+- T025-T030 (processing/storage) required for T031-T032 (notebook interface)
+- T031-T032 (notebook interface) required for T033-T034 (integration tests)
 
 **Parallel Execution Opportunities**:
 - T003-T005 can run in parallel after T002
@@ -197,14 +197,14 @@ Task: "Data quality validators in src/dvol_data_ingest/validators/quality.py"
 
 **Metadata**: IngestionMetadata common to all storage models
 
-## CLI Commands Coverage
+## Notebook Operations Coverage
 
-- `dvol-ingest fetch` - Fetch data from specific sources and assets
-- `dvol-ingest validate` - Run data quality validation checks
-- `dvol-ingest backfill` - Historical data backfill operations
-- `dvol-ingest status` - Pipeline status and data freshness reporting
-- `dvol-ingest run-daily` - Complete daily ingestion cycle
-- `dvol-ingest test-connection` - API connectivity testing
+- **Cell 3: Data Fetching** - Interactive fetch operations for specific sources and assets with real-time progress
+- **Cell 4: Schema Validation** - Live data quality validation checks with immediate feedback
+- **Cell 7: Backfill Operations** - Historical data backfill with progress visualization
+- **Cell 6: Monitoring Dashboard** - Pipeline status and data freshness reporting with charts
+- **Cell 3-7: Daily Cycle** - Complete daily ingestion cycle execution with step-by-step control
+- **Cell 8: Troubleshooting** - API connectivity testing and debug tools
 
 ## Validation Checklist
 *GATE: All items must be checked before task execution*
@@ -217,7 +217,7 @@ Task: "Data quality validators in src/dvol_data_ingest/validators/quality.py"
 - [x] No task modifies same file as another [P] task
 - [x] TDD enforced: contract tests must fail before implementation
 - [x] Integration tests cover end-to-end pipeline (T033-T034)
-- [x] CLI provides all required commands from specification
+- [x] Notebook interface provides all required operations from specification
 - [x] Storage engine handles Parquet partitioning requirements
 - [x] UTC normalization and checksum requirements covered
 
