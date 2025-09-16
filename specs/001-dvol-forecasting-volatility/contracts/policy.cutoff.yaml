@@ -1,0 +1,75 @@
+version: 1
+process_timezone: UTC
+cutoff_utc: "00:00"
+feature_freeze_before_target_close: true
+asof_join_keys:
+  - asset
+  - date
+anti_leakage_rules:
+  - name: no_future_rows_in_features
+    description: Features may only use t and earlier (strictly t-1 for most), never t+*
+  - name: training_scalers_fit_on_train_only
+    description: Fit any scaler/encoder on training folds only
+allowed_sources:
+  dvol_ohlc: 
+    endpoint: "/v1/data/ohlc/deribit/volatility"
+    symbols:
+      - BTC
+      - ETH
+  futures_ohlcv:
+    endpoint: "/v1/data/ohlc/deribit/futures/"
+    symbols:
+      - BTC-PERPETUAL
+      - ETH-PERPETUAL
+  options_summaries:
+    endpoint: "/v1/data/summary/deribit/options/greeks/maturities/"
+    underlying:
+      - BTC
+      - ETH
+  funding:
+    endpoint: "/v1/data/ohlc/deribit/futures/funding/"
+    symbols:
+      - BTC-PERPETUAL
+      - ETH-PERPETUAL
+  onchain:
+    endpoint: "/v1/data/summary/blockchain/blocks/"
+    symbols:
+      - btc
+      - eth
+missing_data_policy:
+  onchain_forward_fill_one_day: true
+  drop_day_if_onchain_missing_ratio_gt: 0.3
+  options_availability_min_volume_days_ratio: 0.7
+eth_enablement_gates:
+  dvol_futures_median_usd_volume_20d_min: 2000000
+uncertainty:
+  method: quantile_regression
+  quantiles:
+    - 0.1
+    - 0.5
+    - 0.9
+reporting:
+  store_audit_metadata: true
+  parquet_partitioning: "data/{layer}/{table}/asset={asset}/date={date}/part.parquet"
+name: dvol_cutoff_policy
+anti_leakage:
+  - "No features use timestamps >= target date close"
+  - "All rolling windows end strictly before cutoff"
+missing_data:
+  onchain:
+    forward_fill_max_days: 1
+    flag: onchain_is_imputed
+    drop_if_missing_ratio_gt: 0.3
+  options:
+    availability_flag: options_availability_flag
+    drop_if_unavailable: false
+storage:
+  format: parquet
+  partitioning:
+    - asset
+    - date
+audit:
+  record:
+    - row_count
+    - min_max_ranges
+    - checksums

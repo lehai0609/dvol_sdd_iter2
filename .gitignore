@@ -185,3 +185,27 @@ cython_debug/
 data/
 *.parquet
 **/raw_*/
+# Local data artifacts
+*.csv
+*.json
+*.tsv
+*.xlsx
+*.feather
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.npy
+*.npz
+*.sav
+*.mat
+# Notebook cache folders
+notebooks/**/checkpoint*/
+notebooks/**/tmp/
+# Miscellaneous local files
+*.bak
+*.tmp
+*.old
+.DS_Store
+Thumbs.db

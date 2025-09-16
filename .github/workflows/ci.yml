@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+      - name: Install dependencies
+        run: |
+          poetry install
+      - name: Lint
+        run: |
+          poetry run ruff check .
+      - name: Run tests
+        run: |
+          poetry run pytest -q
+      - name: Notebook smoke (nbclient)
+        run: |
+          python - <<'PY'
+          from nbformat import v4 as nbf
+          from nbclient import NotebookClient
+          import nbformat
+          nb = nbf.new_notebook()
+          nb.cells = [
+              nbf.new_markdown_cell("CI Smoke"),
+              nbf.new_code_cell("x=1+1\nprint('ok')")
+          ]
+          nbformat.write(nb, 'smoke.ipynb')
+          client = NotebookClient(nb, timeout=60, kernel_name='python3')
+          client.execute()
+          PY
